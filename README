@@ -1,36 +1,42 @@
+April 20, 2012
 Andre Kwok
 Takuya Yamashita
 
 URL: https://github.com/andrekwok816/RSA595
 
 Approach:
- 	1. First creates the RSA public key and c and sends to the server.
-	2. Upon receiving those keys, the server brute force cracking the private key.
-	3. The server prints the message using the private key.
-	4. The client keeps sending requests until it finishes on its own.
- 	5. The server never gets shut down by the client, but rather shuts it down on its own.
+ 	1. First both server and client generates a public key and send 	   them to each other.
+	2. Upon receiving those keys, the server and client brute force 	   cracking the private key.
+	3. Both server and client can send and receive messages with non-	   block. When they receive messages, print the message.
+	4. If server exits, that quits the client as well.
+ 	5. The server never gets shut down by the client, but rather shuts 	   it down on its own.
 	
 Protocol:
-	The client first sends the request as follows:
-		Public: 451 c: 2623
-	The next time the client sends the request in a following format:
+	The client and server first send the public key as follows:
+		e: 451 c: 2623
+	The next time the client and server sends the request in a 	following format (after encrypted):
 		1184 2123 4124 124 1241
+	Type quit to exit.
 
 Structures
        Client
-	1. Ask the public key and c from the user.
-	2. Open the socket using the already open port
-	3. Write the request that conforms with the protocol into the socket
-	4. After that, encrypt messages using the RSA encryption and send the request to the server
-	5. Keep sending until quit is typed.
-	6. Close the socket.
+	1. Generate a public key. 
+	2. Connect to the socket using the already open port
+	3. Send its own public key to the server
+	4. Get the private key using a brute force algorithm 
+	5. After that, encrypt messages using the RSA encryption and send  	   the request to the server
+	6. At the same time, upon receiving encrypted messages, display 	   decrypted messages on a console.
+	7. Close the socket.
 
        Server
-	1. Connect to the socket.
-	2. Spawn a thread to listen to the client request.
-	3. Receive the public key and c. Then get the private key using a brute force algorithm
-	4. Print the cracked message on a console.
-	5. Type quit to exit	
+	1. Generate a public key
+	2. Open the socket.
+	3. Send its own public key to the client
+	4. Get the private key using a brute force algorithm 
+	5. After that, encrypt messages using the RSA encryption and send  	   the request to the server
+	6. At the same time, upon receiving encrypted messages, display 	   decrypted messages on a console.
+	7. Close the socket.
+	
 	
 Code
 	Nothing special to mark. Please look at our source code.
@@ -38,10 +44,11 @@ Code
 Program Usage
 	1. Run the server.java
 	2. Run the client.java
-	3. Type the public key and c for the client.
-	4. Type messages for the client.
-   	5. Type quit to exit from the client.
-	6. Type quit in the server to exit from the server.
+	3. Type messages in either client or server consoles
+	4. The other side will display the message.
+   	5. Type quit to exit from the client or the server.
+	6. If you quit server first, client will quit.
+	7. If client quits first, the server doesn't get shut down.
 
 
 
@@ -51,35 +58,48 @@ Program Usage
 
 Sample Run
 Client Console
-Please enter a public key: 
-451
-Please enter c: 
-2623
-Sending string: Public: 451 C: 2623
+Client's Public Key(e, c): (319829353, 2501)
+Client's Private Key(d, c): (217, 2501)
+Sending string: e: 319829353 c: 2501
+Received string: 'e: 1635756761 c: 2479'
+Server Private key: (617, 2479)
+
 Please type the string: (type quit to exit)
-Hello!
+Hello from client
 Please type the string: (type quit to exit)
-You are my buddy
+Received string: '1345 48 1859 1859 1628 2000 881 2100 1628 1382 2000 1575 48 2100 1418 48 2100 '
+Decoding message:
+Hello from server
+Finished Decoding
+Client about to quit
 Please type the string: (type quit to exit)
-12/31/2012
-Please type the string: (type quit to exit)
+Received string: '525 48 2100 1418 48 2100 2000 2450 1569 1628 376 1478 2000 1478 1628 2000 61 376 1437 1478 '
+Decoding message:
+Server about to quit
+Finished Decoding
 quit
+exit
 
 Server Console
-Received string: 'Public: 451 C: 2623'
-The generated Private key: 1531
-Received string: '1148 326 1145 1145 1780 2041 '
-Decoding message:
-Hello!
-Finished Decoding
-Received string: '33 1780 2618 1249 1073 2082 326 1249 719 1036 1249 1854 2618 1991 1991 1036 '
-Decoding message:
-You are my buddy
-Finished Decoding
-Received string: '49 2329 1999 254 49 1999 2329 2427 49 2329 '
-Decoding message:
-12/31/2012
-Finished Decoding
-quit
+Server's Public Key(e, c): (1635756761, 2479)
+Server's Private Key(d, c): (617, 2479)
 Server is exiting
+Received string: 'e: 319829353 c: 2501'
+Client Private key: (217, 2501)
 
+Please type the string: (type quit to exit)
+Received string: '804 1748 47 47 2063 32 2004 1549 2063 109 32 1126 47 1917 1748 585 1283 '
+Decoding message:
+Hello from client
+Finished Decoding
+Hello from server
+Sending from Server: '1345 48 1859 1859 1628 2000 881 2100 1628 1382 2000 1575 48 2100 1418 48 2100 '
+Please type the string: (type quit to exit)
+Received string: '1523 47 1917 1748 585 1283 32 1224 160 2063 2279 1283 32 1283 2063 32 2321 2279 1917 1283 '
+Decoding message:
+Client about to quit
+Finished Decoding
+Server about to quit
+Sending from Server: '525 48 2100 1418 48 2100 2000 2450 1569 1628 376 1478 2000 1478 1628 2000 61 376 1437 1478 '
+Please type the string: (type quit to exit)
+quit

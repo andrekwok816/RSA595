@@ -15,15 +15,25 @@ public class MiniRSA {
 		rsa.run3();
 	}
 	
+	public long getPrimeNumber(long n){
+		long count = n, num = 1;
+		while(count != 0){			
+			num++;
+			if(isPrime(num) == true)
+				count--;
+		}
+		return num;
+	}
+	
 	public void run(){
 //		System.out.println(mod_inverse(451, totient(2623)));
 		System.out.println("Enter the nth prime and the mth prime to compute");
 		String number = scan.next();
 		String number2 = scan.next();
-		int nthNumber = Integer.parseInt(number);
-		int mthNumber = Integer.parseInt(number2);
+		long nthNumber = Long.parseLong(number);
+		long mthNumber = Long.parseLong(number2);
 		System.out.println(nthNumber + " " + mthNumber);
-		int count = nthNumber, num = 1, firstPrime, secondPrime, c, m, e, d;
+		long count = nthNumber, num = 1, firstPrime, secondPrime, c, m, e, d;
 		while(count != 0){			
 			num++;
 			if(isPrime(num) == true)
@@ -53,8 +63,8 @@ public class MiniRSA {
 		System.out.println("Please enter the public key (e, c): first e, then c");
 		String number = scan.next();
 		String number2 = scan.next();
-		int intNum = Integer.parseInt(number);
-		int intNum2 = Integer.parseInt(number2);
+		long intNum = Long.parseLong(number);
+		long intNum2 = Long.parseLong(number2);
 		System.out.println("Please enter a sentence to encrypt");
 		String input = scan.next();
 		for(int i = 0; i < input.length(); i++){
@@ -63,15 +73,15 @@ public class MiniRSA {
 		System.out.println("Please enter the private key (d, c): first d, then c");
 		String stringNumber = scan.next();
 		String stringNumber2 = scan.next();
-		int intNumber = Integer.parseInt(stringNumber);
-		int intNumber2 = Integer.parseInt(stringNumber2);
+		long intNumber = Long.parseLong(stringNumber);
+		long intNumber2 = Long.parseLong(stringNumber2);
 		String input2 = "";
 		while(input2.equals("quit") == false){
 			System.out.println("Enter next char cipher value as an int, type quit to quit");
 			input2 = scan.next();
 			if(input2.equals("quit") == false){
-				int intNumber3 = Integer.parseInt(input2);
-				int encryptNumber = endecrypt(intNumber3, intNumber, intNumber2);
+				long intNumber3 = Long.parseLong(input2);
+				long encryptNumber = endecrypt(intNumber3, intNumber, intNumber2);
 				System.out.println((char) encryptNumber + " " + encryptNumber);
 			}
 		}
@@ -81,11 +91,11 @@ public class MiniRSA {
 		System.out.println("Enter the public key value");
 		String stringNumber = scan.next();
 		String stringNumber2 = scan.next();
-		int intNumber = Integer.parseInt(stringNumber);
-		int intNumber2 = Integer.parseInt(stringNumber2);
-		int a = 0, b = 0, totient = totient(2623), d = 0;
+		long intNumber = Long.parseLong(stringNumber);
+		long intNumber2 = Long.parseLong(stringNumber2);
+		long a = 0, b = 0, totient = totient(2623), d = 0;
 		//451 2623
-		int[] array = calculateC(intNumber2);
+		long[] array = calculateC(intNumber2);
 		a = array[1];
 		b = array[0];
 		d = mod_inverse(intNumber, totient);
@@ -101,8 +111,8 @@ public class MiniRSA {
 			System.out.println("Enter a letter to encrypt/decrypt, or quit to exit");
 			input = scan.next();
 			if(input.equals("quit") == false){
-				int intNumber3 = Integer.parseInt(input); //1148
-				int decryptedValue = endecrypt(intNumber3, d, intNumber2);
+				long intNumber3 = Long.parseLong(input); //1148
+				long decryptedValue = endecrypt(intNumber3, d, intNumber2);
 				System.out.println("This char decrypted to " + decryptedValue);
 				System.out.println("The letter is " + (char) decryptedValue);
 			}
@@ -110,19 +120,19 @@ public class MiniRSA {
 		System.out.println("Done!");
 	}//run3
 	
-	private int nextPrime(int n){
-		int number = n + 1;
+	private long nextPrime(long n){
+		long number = n + 1;
 		while(isPrime(number) == false){
 			number++;
 		}
 		return number;
 	}
 	
-	public int[] calculateC(int n){
-		ArrayList<Integer> array = new ArrayList<Integer>();
-		int[] returnArray = new int[2];
+	public long[] calculateC(long n){
+		ArrayList<Long> array = new ArrayList<Long>();
+		long[] returnArray = new long[2];
 		boolean isDone = false;
-		array.add(2);
+		array.add((long)2);
 		while(isDone == false){
 			array.add(nextPrime(array.get(array.size()- 1)));
 			for(int i = array.size() - 1; i < array.size(); i++){
@@ -138,7 +148,7 @@ public class MiniRSA {
 		return returnArray;
 	}
 	
-	private boolean isPrime(int n) {
+	private boolean isPrime(long n) {
 	    for(int i = 2; i < n; i++) {
 	        if(n % i == 0)
 	            return false;
@@ -146,8 +156,8 @@ public class MiniRSA {
 	    return true;
 	}
 	
-	public int coprime(int x){
-		int number;
+	public long coprime(long x){
+		long number;
 		number = Math.abs(random.nextInt());
 		while(GCD(number, x) != 1){
 			number = Math.abs(random.nextInt());
@@ -155,37 +165,37 @@ public class MiniRSA {
 		return number;
 	}
 	
-	public int GCD(int a, int b){
-		int s;
+	public long GCD(long a, long b){
+		long s;
 		if (a > b) s = b;
 		else s = a;
 		
-		for (int i = s; i > 0; i--) {
+		for (long i = s; i > 0; i--) {
 			if ((a%i == 0) && (b%i == 0))
 				return i;
 		}
 		return -1;
 	}
 	
-	public int mod_inverse(int base, int m){
-        int[] array = extendedEuclid(base, m);
+	public long mod_inverse(long base, long m){
+        long[] array = extendedEuclid(base, m);
         if (array[0] == 1){
-            int value = array[1] % m;
+            long value = array[1] % m;
             if (value < 0) value = value + m;
                 return value;
         }
         return 0;
 }
 
-private int[] extendedEuclid(int base, int m){
-        int[] array = new int[3];
+private long[] extendedEuclid(long base, long m){
+        long[] array = new long[3];
         if (base == m){
                 array[0] = base;
                 array[1] = 1;
                 array[2] = 0;
         }
         else{
-                ArrayList<Integer>[] list = new ArrayList[6];
+                ArrayList<Long>[] list = new ArrayList[6];
                 for (int i = 0; i < 6; i++){
                         list[i] = new ArrayList();
                 }
@@ -208,8 +218,8 @@ private int[] extendedEuclid(int base, int m){
                         i = i + 1;
                 }
                 i = i - 1;
-                list[4].add(1);
-                list[5].add(0);
+                list[4].add((long)1);
+                list[5].add((long)0);
                 i = i - 1;
                 int j = 0;
                 while (i >= 0){
@@ -236,17 +246,17 @@ public int modulo(int a , int b, int c){
         return (int)Math.pow(a, b) % c;
 }
 
-public int totient(int n){
+public int totient(long n){
         int count = 0; 
         for(int i = 1; i < n; i++) 
                 if(GCD(n,i) == 1) count++; 
         return count; 
 }
 
-public int endecrypt(int msg_or_cipher, int key, int c){
+public long endecrypt(long msg_or_cipher, long key, long c){
         // H ->72, key ->451, c ->2623 result 1148
         // 72^451 % 2623
-        int result = 0;
+        long result = 0;
         if (key == 0){
                 result = 1 % c;
         }
@@ -254,8 +264,8 @@ public int endecrypt(int msg_or_cipher, int key, int c){
                 result = msg_or_cipher % c;
         }
         else{
-                ArrayList<Integer> intArray = int2baseTwo(key);
-                ArrayList<Integer> copyIntArray = new ArrayList<Integer>();
+                ArrayList<Long> intArray = int2baseTwo(key);
+                ArrayList<Long> copyIntArray = new ArrayList<Long>();
                 for (int i = 0; i < intArray.size(); i++){
                         copyIntArray.add(intArray.get(i));
                 }
@@ -287,15 +297,15 @@ public int endecrypt(int msg_or_cipher, int key, int c){
         return result;
 }
 
-private ArrayList<Integer> int2baseTwo(int d){
-        ArrayList<Integer> intArray = new ArrayList<Integer>();
-        int num = d;
+private ArrayList<Long> int2baseTwo(long d){
+        ArrayList<Long> intArray = new ArrayList<Long>();
+        long num = d;
         while ( num >= 1){
                 if (num % 2 == 0){
-                        intArray.add(0);
+                        intArray.add((long)0);
                 }
                 else{
-                        intArray.add(1);
+                        intArray.add((long)1);
                 }
                 num = num / 2;
         }

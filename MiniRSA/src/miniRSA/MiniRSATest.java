@@ -42,7 +42,7 @@ public class MiniRSATest {
 	
 	@Test
 	public void testCaluculateC(){
-		int[] array = rsa.calculateC(2623);
+		long[] array = rsa.calculateC(2623);
 		assertEquals(61, array[0]);
 		assertEquals(43, array[1]);
 	}
