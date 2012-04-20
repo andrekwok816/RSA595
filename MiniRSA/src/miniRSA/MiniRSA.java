@@ -10,12 +10,13 @@ public class MiniRSA {
 	
 	public static void main(String[] arg){
 		MiniRSA rsa = new MiniRSA();
-		rsa.run();
-		rsa.run2();
+		//		rsa.run();
+		//		rsa.run2();
 		rsa.run3();
 	}
 	
 	public void run(){
+		//		System.out.println(mod_inverse(451, totient(2623)));
 		System.out.println("Enter the nth prime and the mth prime to compute");
 		String number = scan.next();
 		String number2 = scan.next();
@@ -82,10 +83,17 @@ public class MiniRSA {
 		String stringNumber2 = scan.next();
 		int intNumber = Integer.parseInt(stringNumber);
 		int intNumber2 = Integer.parseInt(stringNumber2);
+		int a = 0, b = 0, totient = totient(2623), d = 0;
+		//451 2623
+		int[] array = calculateC(intNumber2);
+		a = array[1];
+		b = array[0];
+		d = mod_inverse(intNumber, totient);
+		
 		String input = "";
 		System.out.println("Enter the c that goes with the public key");
 		//calculate ...
-		int a = 0, b = 0, totient = 0, d = 0;
+		
 		System.out.println("a was " + a + " b was " + b + "\nThe totient is " + 
 						   totient + "\nD was found to be " + d);
 		
@@ -93,14 +101,42 @@ public class MiniRSA {
 			System.out.println("Enter a letter to encrypt/decrypt, or quit to exit");
 			input = scan.next();
 			if(input.equals("quit") == false){
-				int intNumber3 = Integer.parseInt(input);
-				int decryptedValue = endecrypt(intNumber3, intNumber, intNumber2);
+				int intNumber3 = Integer.parseInt(input); //1148
+				int decryptedValue = endecrypt(intNumber3, d, intNumber2);
 				System.out.println("This char decrypted to " + decryptedValue);
 				System.out.println("The letter is " + (char) decryptedValue);
 			}
 		}
 		System.out.println("Done!");
 	}//run3
+	
+	private int nextPrime(int n){
+		int number = n + 1;
+		while(isPrime(number) == false){
+			number++;
+		}
+		return number;
+	}
+	
+	public int[] calculateC(int n){
+		ArrayList<Integer> array = new ArrayList<Integer>();
+		int[] returnArray = new int[2];
+		boolean isDone = false;
+		array.add(2);
+		while(isDone == false){
+			array.add(nextPrime(array.get(array.size()- 1)));
+			for(int i = array.size() - 1; i < array.size(); i++){
+				for(int j = 0; j < array.size(); j++){
+					if(array.get(i) * array.get(j) == n && i != j){
+						returnArray[0] = array.get(i);
+						returnArray[1] = array.get(j);
+						isDone = true;
+					}			
+				}//inner loop
+			}//outer loop
+		}//while
+		return returnArray;
+	}
 	
 	private boolean isPrime(int n) {
 	    for(int i = 2; i < n; i++) {
@@ -219,7 +255,7 @@ public class MiniRSA {
         }
         else{
 			ArrayList<Integer> intArray = int2baseTwo(key);
-			ArrayList<Integer> copyIntArray = new ArrayList<>();
+			ArrayList<Integer> copyIntArray = new ArrayList<Integer>();
 			for (int i = 0; i < intArray.size(); i++){
 				copyIntArray.add(intArray.get(i));
 			}
@@ -252,7 +288,7 @@ public class MiniRSA {
 	}
 	
 	private ArrayList<Integer> int2baseTwo(int d){
-        ArrayList<Integer> intArray = new ArrayList<>();
+        ArrayList<Integer> intArray = new ArrayList<Integer>();
         int num = d;
         while ( num >= 1){
 			if (num % 2 == 0){
