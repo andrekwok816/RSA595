@@ -4,25 +4,7 @@ import java.io.*;
 import java.net.*;
 import java.util.ArrayList;
 import java.util.Scanner;
-/*MainServer
- * 
- * 1. A static Vector<Socket> with a predefined size.
- * 2. Customized enqueue and dequeue operations on the Vector.
- * 3. Run forever : accept() and enqueue
- *  
- * A function to kill or terminate all worker threads
- * 
- * constructor: spawn all worker threads
- * 
- * */
 
-/*ThreadWorkers
- * 
- * 1.Dequeue from mainServer's Vector
- * 2. Read()/write()
- * Will encompass your RSA
- * 
- * */
 class Client {
 	
    public static void main(String args[]) {
